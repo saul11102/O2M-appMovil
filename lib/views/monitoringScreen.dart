@@ -165,7 +165,7 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
                   SizedBox(height: 10),
                   DataTable(
                     columns: const [
-                      DataColumn(label: Text('Total de sólidos disueltos (mg/L)')),
+                      DataColumn(label: Text('Sólidos disueltos (mg/L)')),
                       DataColumn(label: Text('Calidad del agua')),
                     ],
                     rows: [
