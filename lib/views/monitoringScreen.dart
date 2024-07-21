@@ -23,7 +23,8 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
 
   Future<void> fetchData() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:5000/monitoring/promedio/todo'));
+      final response = await http
+          .get(Uri.parse('http://localhost:5000/monitoring/promedio/todo'));
       if (response.statusCode == 200) {
         final datos = json.decode(response.body);
         if (datos['code'] == 200) {
@@ -32,10 +33,12 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
 
           // Procesa los datos del aire
           final labelsAire = aireData
-              .map<String>((item) => '${item['dia']}/${item['mes']}/${item['año']}')
+              .map<String>(
+                  (item) => '${item['dia']}/${item['mes']}/${item['año']}')
               .toList();
           final dataAire = aireData
-              .map<double>((item) => (item['promedioCalidadDato'] as num).toDouble())
+              .map<double>(
+                  (item) => (item['promedioCalidadDato'] as num).toDouble())
               .toList();
           setState(() {
             chartDataAire = {
@@ -52,10 +55,12 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
 
           // Procesa los datos del agua
           final labelsAgua = aguaData
-              .map<String>((item) => '${item['dia']}/${item['mes']}/${item['año']}')
+              .map<String>(
+                  (item) => '${item['dia']}/${item['mes']}/${item['año']}')
               .toList();
           final dataAgua = aguaData
-              .map<double>((item) => (item['promedioCalidadDato'] as num).toDouble())
+              .map<double>(
+                  (item) => (item['promedioCalidadDato'] as num).toDouble())
               .toList();
           setState(() {
             chartDataAgua = {
@@ -80,7 +85,7 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
     }
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -88,27 +93,111 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
         titleTextStyle: TextStyle(
           color: Colors.white,
         ),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.black54,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 20),
+            
+            
+            // Tabla para Calidad del Aire
             Container(
               padding: const EdgeInsets.all(12.0),
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Eje X: Fecha de recolección de datos\nEje Y: Nivel de contaminación (PPM)',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Métricas para calidad de aire',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Nivel de CO2 (ppm)')),
+                      DataColumn(label: Text('Calidad del aire')),
+                    ],
+                    rows: [
+                      DataRow(cells: [
+                        DataCell(Text('Menos de 100')),
+                        DataCell(Text('Excelente')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('100 - 200')),
+                        DataCell(Text('Bueno')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('200-400')),
+                        DataCell(Text('Aceptable')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('400-800')),
+                        DataCell(Text('Moderado')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('Más de 800')),
+                        DataCell(Text('Deficiente')),
+                      ]),
+                    ],
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
+            // Tabla para Calidad del Agua
             Container(
-              color: Colors.blueGrey[800], // Color de fondo para el cuadro de los títulos
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Medidas de Calidad del Agua',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Total de sólidos disueltos (mg/L)')),
+                      DataColumn(label: Text('Calidad del agua')),
+                    ],
+                    rows: [
+                      DataRow(cells: [
+                        DataCell(Text('Menos de 300')),
+                        DataCell(Text('Excelente')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('300-600')),
+                        DataCell(Text('Bueno')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('600-900')),
+                        DataCell(Text('Regular')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('900-1200')),
+                        DataCell(Text('Pobre')),
+                      ]),
+                      DataRow(cells: [
+                        DataCell(Text('Más de 1200')),
+                        DataCell(Text('Inaceptable')),
+                      ]),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+            Container(
+              color: Colors.blueGrey[
+                  800], // Color de fondo para el cuadro de los títulos
               padding: const EdgeInsets.all(12.0),
               child: Text(
                 'Calidad del Aire',
@@ -125,7 +214,8 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
                 : CircularProgressIndicator(),
             const SizedBox(height: 40),
             Container(
-              color: Colors.blueGrey[800], // Color de fondo para el cuadro de los títulos
+              color: Colors.blueGrey[
+                  800], // Color de fondo para el cuadro de los títulos
               padding: const EdgeInsets.all(12.0),
               child: Text(
                 'Calidad del Agua',
@@ -147,7 +237,6 @@ class _MonitoringscreenState extends State<Monitoringscreen> {
   }
 }
 
-
 class LineChartSample extends StatelessWidget {
   final Map<String, dynamic> chartData;
 
@@ -156,9 +245,9 @@ class LineChartSample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 40.0), 
+      padding: EdgeInsets.symmetric(horizontal: 40.0),
       child: FittedBox(
-        fit: BoxFit.contain, 
+        fit: BoxFit.contain,
         child: SizedBox(
           height: 350,
           width: MediaQuery.of(context).size.width,
@@ -168,7 +257,8 @@ class LineChartSample extends StatelessWidget {
                 bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 80, // Ajusta el tamaño reservado para el título del eje X
+                    reservedSize:
+                        80, // Ajusta el tamaño reservado para el título del eje X
                     interval: chartData['labels'].length > 10
                         ? (chartData['labels'].length / 10).ceil().toDouble()
                         : 1,
@@ -215,7 +305,8 @@ class LineChartSample extends StatelessWidget {
                 ),
                 rightTitles: AxisTitles(
                   sideTitles: SideTitles(
-                    showTitles: false, // Oculta los títulos del eje Y en el lado derecho
+                    showTitles:
+                        false, // Oculta los títulos del eje Y en el lado derecho
                   ),
                 ),
               ),
@@ -223,7 +314,8 @@ class LineChartSample extends StatelessWidget {
                 LineChartBarData(
                   spots: List.generate(
                     chartData['datasets'][0]['data'].length,
-                    (index) => FlSpot(index.toDouble(), chartData['datasets'][0]['data'][index]),
+                    (index) => FlSpot(index.toDouble(),
+                        chartData['datasets'][0]['data'][index]),
                   ),
                   isCurved: true,
                   color: chartData['datasets'][0]['backgroundColor'],
@@ -237,4 +329,3 @@ class LineChartSample extends StatelessWidget {
     );
   }
 }
-
